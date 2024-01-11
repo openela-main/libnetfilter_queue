@@ -1,0 +1,77 @@
+From b9986739f0ec0ffc2bf37951fc8308fbfb433d0c Mon Sep 17 00:00:00 2001
+From: Florian Westphal <fw@strlen.de>
+Date: Sat, 6 Jun 2020 16:14:44 +0200
+Subject: [PATCH] configure: add --with/without-doxygen switch
+
+Allows to turn off doxygen even if its installed, via
+--without-doxygen.
+
+Default is to probe for doxygen presence (--with-doxygen).
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+(cherry picked from commit 3622e6061d5cc34db70cef7b8516217e27ffa57c)
+
+Conflicts:
+- Change configure script itself instead of configure.ac as original patch
+  does.
+---
+
+--- a/configure
++++ b/configure
+@@ -770,6 +770,7 @@
+ with_gnu_ld
+ with_sysroot
+ enable_libtool_lock
++with_doxygen
+ '
+       ac_precious_vars='build_alias
+ host_alias
+@@ -1441,6 +1442,7 @@
+   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
+   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
+                           compiler's sysroot if not specified).
++  --with-doxygen          create doxygen documentation
+ 
+ Some influential environment variables:
+   CC          C compiler command
+@@ -13278,7 +13280,17 @@
+ 
+ 
+ 
+-for ac_prog in doxygen
++# Check whether --with-doxygen was given.
++if test "${with_doxygen+set}" = set; then :
++  withval=$with_doxygen; with_doxygen="$withval"
++else
++  with_doxygen=yes
++fi
++
++
++if test "x$with_doxygen" != xno; then :
++
++	for ac_prog in doxygen
+ do
+   # Extract the first word of "$ac_prog", so it can be a program name with args.
+ set dummy $ac_prog; ac_word=$2
+@@ -13320,9 +13332,7 @@
+   test -n "$DOXYGEN" && break
+ done
+ 
+-if test -z "$DOXYGEN";
+-	then { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Doxygen not found - continuing without Doxygen support" >&5
+-$as_echo "$as_me: WARNING: Doxygen not found - continuing without Doxygen support" >&2;}
++
+ fi
+ 
+  if test -n "$DOXYGEN"; then
+@@ -13333,6 +13343,10 @@
+   HAVE_DOXYGEN_FALSE=
+ fi
+ 
++if test -z "$DOXYGEN"; then
++		{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Doxygen not found - continuing without Doxygen support" >&5
++$as_echo "$as_me: WARNING: Doxygen not found - continuing without Doxygen support" >&2;}
++fi
+ cat >confcache <<\_ACEOF
+ # This file is a shell script that caches the results of configure
+ # tests run on this system so they can be shared between configure
